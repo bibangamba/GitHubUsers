@@ -37,7 +37,8 @@ public class DetailActivity extends AppCompatActivity implements GithubUserDetai
         userDetails = getIntentThatLaunchDetailActivity.getParcelableExtra(getString(R.string.github_user_details));
 
         if (savedInstanceState == null) {
-            GithubUserDetailsPresenter githubUserDetailsPresenter = new GithubUserDetailsPresenter(this, this, new GithubService());
+            GithubUserDetailsPresenter githubUserDetailsPresenter =
+                    new GithubUserDetailsPresenter(this, this, new GithubService());
             githubUserDetailsPresenter.getGithubUserInfo(userDetails.getUsername());
             EspressoIdlingResource.increment();
         }

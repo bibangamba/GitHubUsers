@@ -35,7 +35,8 @@ public class GithubUsersPresenter {
                 .getAllUsers()
                 .enqueue(new Callback<GithubUsersResponse>() {
                     @Override
-                    public void onResponse(@NonNull Call<GithubUsersResponse> call, @NonNull Response<GithubUsersResponse> response) {
+                    public void onResponse(@NonNull Call<GithubUsersResponse> call,
+                                           @NonNull Response<GithubUsersResponse> response) {
                         GithubUsersResponse githubUsersResponse = response.body();
                         assert githubUsersResponse != null;
                         List<GithubUsers> users = githubUsersResponse.getUsers();
@@ -43,9 +44,12 @@ public class GithubUsersPresenter {
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<GithubUsersResponse> call, @NonNull Throwable t) {
+                    public void onFailure(@NonNull Call<GithubUsersResponse> call,
+                                          @NonNull Throwable t) {
                         try {
-                            throw new InterruptedException(context.getString(R.string.error_message_when_retrieving_data_from_api));
+                            throw new InterruptedException(
+                                    context.getString(
+                                            R.string.error_message_when_retrieving_data_from_api));
                         } catch (InterruptedException e) {
                             Log.e(TAG, e.toString());
                         }

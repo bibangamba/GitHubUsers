@@ -33,7 +33,8 @@ public class UserDetailsScreenTest {
 
 
     @Rule
-    public IntentsTestRule<DetailActivity> detailActivityActivityTestRule = new IntentsTestRule<>(DetailActivity.class, true, false);
+    public IntentsTestRule<DetailActivity> detailActivityActivityTestRule =
+            new IntentsTestRule<>(DetailActivity.class, true, false);
 
     @Before
     public void intentWithStubbedUserNameAndInfo() {
@@ -87,17 +88,13 @@ public class UserDetailsScreenTest {
         onView(withId(R.id.followsValueTextView)).check(matches(withText("107")));
     }
 
-    private String getResourceString(int id) {
-        Context targetContext = InstrumentationRegistry.getTargetContext();
-        return targetContext.getResources().getString(id);
-    }
-
     /**
      * Unregister Idling Resource so it can be garbage collected and does not leak any memory.
      */
     @After
     public void unregisterIdlingResource() {
-        IdlingRegistry.getInstance().unregister(detailActivityActivityTestRule.getActivity().getCountingIdlingResource());
+        IdlingRegistry.getInstance().unregister(
+                detailActivityActivityTestRule.getActivity().getCountingIdlingResource());
     }
 
     /**
@@ -106,6 +103,12 @@ public class UserDetailsScreenTest {
      * synchronize your test actions, which makes tests significantly more reliable.
      */
     private void registerIdlingResource() {
-        IdlingRegistry.getInstance().register(detailActivityActivityTestRule.getActivity().getCountingIdlingResource());
+        IdlingRegistry.getInstance().register(
+                detailActivityActivityTestRule.getActivity().getCountingIdlingResource());
+    }
+
+    private String getResourceString(int id) {
+        Context targetContext = InstrumentationRegistry.getTargetContext();
+        return targetContext.getResources().getString(id);
     }
 }
