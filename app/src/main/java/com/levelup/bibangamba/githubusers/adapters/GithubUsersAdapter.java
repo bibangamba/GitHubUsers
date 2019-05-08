@@ -18,7 +18,8 @@ import java.util.List;
 import com.levelup.bibangamba.githubusers.model.GithubUsers;
 import com.levelup.bibangamba.githubusers.view.DetailActivity;
 
-public class GithubUsersAdapter extends RecyclerView.Adapter<GithubUsersAdapter.GithubUserViewHolder> {
+public class GithubUsersAdapter extends
+        RecyclerView.Adapter<GithubUsersAdapter.GithubUserViewHolder> {
     private Context context;
     private List<GithubUsers> githubUsers;
     private String GITHUB_USER_DETAILS;
@@ -33,13 +34,15 @@ public class GithubUsersAdapter extends RecyclerView.Adapter<GithubUsersAdapter.
     @NonNull
     @Override
     public GithubUserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        View githubUserListItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.github_user_grid_item, parent, false);
+        View githubUserListItem = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.github_user_grid_item, parent, false);
         return new GithubUserViewHolder(githubUserListItem);
     }
 
     @Override
     public void onBindViewHolder(@NonNull GithubUserViewHolder githubUserViewHolder, int position) {
-        githubUserViewHolder.githubUsernameTextView.setText(githubUsers.get(position).getUsername());
+        githubUserViewHolder.githubUsernameTextView
+                .setText(githubUsers.get(position).getUsername());
         Glide
                 .with(context)
                 .load(githubUsers.get(position).getProfilePicture())

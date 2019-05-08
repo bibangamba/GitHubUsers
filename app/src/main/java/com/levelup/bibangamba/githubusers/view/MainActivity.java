@@ -76,7 +76,8 @@ public class MainActivity extends AppCompatActivity implements GithubUsersView, 
     @Override
     public void githubUsersHaveBeenFetchedAndAreReadyForUse(List<GithubUsers> githubUsers) {
         retrievedGithubUsers = (ArrayList<GithubUsers>) githubUsers;
-        githubUsersRecyclerView.setAdapter(new GithubUsersAdapter(MainActivity.this, githubUsers));
+        githubUsersRecyclerView.setAdapter(new GithubUsersAdapter(
+                MainActivity.this, githubUsers));
         githubUsersRecyclerView.setVisibility(View.VISIBLE);
         githubUsersProgressBar.setVisibility(View.GONE);
 
