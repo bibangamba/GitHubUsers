@@ -1,8 +1,9 @@
 package com.levelup.bibangamba.githubusers.view;
 
+import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
@@ -10,7 +11,8 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.levelup.bibangamba.githubusers.R;
-import com.levelup.bibangamba.githubusers.model.GithubUsers;
+import com.levelup.bibangamba.githubusers.model.GithubUser;
+import com.levelup.bibangamba.githubusers.util.DataBindingIdlingResource;
 
 import org.junit.After;
 import org.junit.Before;
@@ -21,39 +23,46 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.Intents.intending;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.anyIntent;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class UserDetailsScreenTest {
     private static final String knownJavaDeveloperUsername = "nellyk";
-
-
     @Rule
     public IntentsTestRule<DetailActivity> detailActivityActivityTestRule =
             new IntentsTestRule<>(DetailActivity.class, true, false);
+    private DataBindingIdlingResource mDataBindingIdlingResource;
 
     @Before
     public void intentWithStubbedUserNameAndInfo() {
-        GithubUsers githubUser = new GithubUsers();
-        githubUser.setUsername("nellyk");
+        GithubUser githubUser = new GithubUser();
+        githubUser.setUsername(knownJavaDeveloperUsername);
         githubUser.setProfilePicture("https://avatars3.githubusercontent.com/u/3062772?v=4");
         githubUser.setProfileUrl("https://github.com/nellyk");
         Intent startDetailActivityIntent = new Intent();
         startDetailActivityIntent.putExtra(getResourceString(R.string.github_user_details), githubUser);
         detailActivityActivityTestRule.launchActivity(startDetailActivityIntent);
+
+        mDataBindingIdlingResource =
+                new DataBindingIdlingResource(detailActivityActivityTestRule);
+
+        IdlingRegistry.getInstance().register(mDataBindingIdlingResource);
     }
 
     @Test
-    public void detailActivityLayoutIsRendered() throws Exception {
+    public void detailActivityLayoutIsRendered() {
         onView(ViewMatchers.withId(R.id.detail_activity_layout)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void githubUserDetailsScreenIsShown() throws Exception {
+    public void githubUserDetailsScreenIsShown() {
         onView(withId(R.id.usernameTextView)).check(matches(withText(knownJavaDeveloperUsername)));
         onView(withId(R.id.usernameTextView)).check(matches(isDisplayed()));
         onView(withId(R.id.shareButton)).check(matches(isDisplayed()));
@@ -63,29 +72,36 @@ public class UserDetailsScreenTest {
         onView(withId(R.id.reposValueTextView)).check(matches(isDisplayed()));
         onView(withId(R.id.followsLabelTextView)).check(matches(isDisplayed()));
         onView(withId(R.id.followersLabelTextView)).check(matches(isDisplayed()));
-        onView(withId(R.id.reposLabeTextView)).check(matches(isDisplayed()));
+        onView(withId(R.id.reposLabelTextView)).check(matches(isDisplayed()));
         onView(withId(R.id.profilePictureImageView)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void homeAsUpButtonIsShown() throws Exception {
+    public void homeAsUpButtonIsShown() {
         onView(withContentDescription(R.string.abc_action_bar_up_description)).check(matches(isDisplayed()));
     }
 
-//    @Test
-//    public void furtherUserDetailsTextViewsShowLoadingStateWhileDataIsFetched() throws Exception {
-//        onView(withId(R.id.usernameTextView)).check(matches(withText(knownJavaDeveloperUsername)));
-//        onView(withId(R.id.followersValueTextView)).check(matches(withText(R.string.default_followers_value)));
-//        onView(withId(R.id.reposValueTextView)).check(matches(withText(R.string.default_repos_value)));
-//        onView(withId(R.id.followsValueTextView)).check(matches(withText(R.string.default_follows_value)));
-//    }
 
     @Test
-    public void furtherUserDetailsAreFetchedAndShownOnDetailsView() throws Exception {
+    public void furtherUserDetailsAreFetchedAndShownOnDetailsView() {
         registerIdlingResource();
-        onView(withId(R.id.followersValueTextView)).check(matches(withText("50")));
+
+        onView(withId(R.id.followersValueTextView)).check(matches(withText("51")));
         onView(withId(R.id.reposValueTextView)).check(matches(withText("44")));
         onView(withId(R.id.followsValueTextView)).check(matches(withText("107")));
+    }
+
+    /**
+     * test to check that chooser intent is sent but do not start activity
+     */
+    @Test
+    public void testOnClickShareButton() {
+        Intent intent = new Intent(Intent.ACTION_CHOOSER);
+        Instrumentation.ActivityResult intentResult =
+                new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
+        intending(anyIntent()).respondWith(intentResult);
+        onView(withId(R.id.shareButton)).perform(click());
+        intended(hasExtra(Intent.EXTRA_TITLE, "Share @nellyk's profile using:"));
     }
 
     /**
@@ -95,6 +111,8 @@ public class UserDetailsScreenTest {
     public void unregisterIdlingResource() {
         IdlingRegistry.getInstance().unregister(
                 detailActivityActivityTestRule.getActivity().getCountingIdlingResource());
+        IdlingRegistry.getInstance().unregister(mDataBindingIdlingResource);
+
     }
 
     /**
@@ -111,4 +129,5 @@ public class UserDetailsScreenTest {
         Context targetContext = InstrumentationRegistry.getTargetContext();
         return targetContext.getResources().getString(id);
     }
+
 }

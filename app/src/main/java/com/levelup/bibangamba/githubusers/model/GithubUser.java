@@ -5,37 +5,38 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class GithubUsers implements Parcelable {
-    public static final Creator<GithubUsers> CREATOR = new Creator<GithubUsers>() {
+public class GithubUser implements Parcelable {
+    public static final Creator<GithubUser> CREATOR = new Creator<GithubUser>() {
         @Override
-        public GithubUsers createFromParcel(Parcel in) {
-            return new GithubUsers(in);
+        public GithubUser createFromParcel(Parcel in) {
+            return new GithubUser(in);
         }
 
         @Override
-        public GithubUsers[] newArray(int size) {
-            return new GithubUsers[size];
+        public GithubUser[] newArray(int size) {
+            return new GithubUser[size];
         }
     };
+    private static final String LOADING = "loading...";
     @SerializedName("avatar_url")
-    private String profilePicture;
+    private String profilePicture = LOADING;
     @SerializedName("login")
-    private String username;
+    private String username = LOADING;
     @SerializedName("html_url")
-    private String profileUrl;
+    private String profileUrl = LOADING;
     @SerializedName("followers")
-    private String followers;
+    private String followers = LOADING;
     @SerializedName("following")
-    private String following;
+    private String following = LOADING;
     @SerializedName("public_repos")
-    private String repos;
+    private String repos = LOADING;
     @SerializedName("company")
-    private String company;
+    private String company = LOADING;
 
-    public GithubUsers() {
+    public GithubUser() {
     }
 
-    protected GithubUsers(Parcel in) {
+    protected GithubUser(Parcel in) {
         profilePicture = in.readString();
         username = in.readString();
         profileUrl = in.readString();

@@ -1,7 +1,5 @@
 package com.levelup.bibangamba.githubusers.model;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -10,13 +8,13 @@ import java.util.List;
 public class GithubUsersResponse {
 
     @SerializedName("items")
-    private List<GithubUsers> users;
+    private List<GithubUser> users;
 
     public GithubUsersResponse() {
         this.users = new ArrayList<>();
     }
 
-    public List<GithubUsers> getUsers() {
+    public List<GithubUser> getUsers() {
         return users;
     }
 

@@ -1,18 +1,16 @@
 package com.levelup.bibangamba.githubusers.model;
 
-import com.levelup.bibangamba.githubusers.model.GithubUsers;
-
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class GithubUsersModelTest {
+public class GithubUserModelTest {
 
     @Test
     public void setAndGetFromUsersModel() {
         //call the presenter function we need (loadUsers)
         //verify that functions we expect to be called are indeed called (getApi or service methods, etc)
-        GithubUsers githubUser = new GithubUsers();
+        GithubUser githubUser = new GithubUser();
         final String username = "nellyk";
         final String profilePicture = "https://avatars3.githubusercontent.com/u/3062772?v=4";
         final String profileURL = "https://github.com/nellyk";

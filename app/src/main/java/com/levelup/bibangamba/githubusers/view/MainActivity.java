@@ -1,6 +1,7 @@
 package com.levelup.bibangamba.githubusers.view;
 
-import android.content.res.Configuration;
+import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.VisibleForTesting;
@@ -8,56 +9,43 @@ import android.support.design.widget.Snackbar;
 import android.support.test.espresso.IdlingResource;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ProgressBar;
 
 import com.levelup.bibangamba.githubusers.R;
+import com.levelup.bibangamba.githubusers.databinding.ActivityMainBinding;
+import com.levelup.bibangamba.githubusers.model.GithubUser;
+import com.levelup.bibangamba.githubusers.presenter.GithubUsersPresenter;
+import com.levelup.bibangamba.githubusers.util.CheckNetworkConnection;
+import com.levelup.bibangamba.githubusers.util.EspressoIdlingResource;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.levelup.bibangamba.githubusers.adapters.GithubUsersAdapter;
-import com.levelup.bibangamba.githubusers.model.GithubUsers;
-import com.levelup.bibangamba.githubusers.presenter.GithubUsersPresenter;
-import com.levelup.bibangamba.githubusers.util.EspressoIdlingResource;
-
-import com.levelup.bibangamba.githubusers.util.CheckNetworkConnection;
-
-public class MainActivity extends AppCompatActivity implements GithubUsersView, SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends AppCompatActivity implements GithubUsersView, IMainActivity,
+        SwipeRefreshLayout.OnRefreshListener {
     public static final String LIST_STATE_KEY = "recycler_list_state";
     public static final String GITHUB_USERS = "retrieved_github_users";
-    RecyclerView githubUsersRecyclerView;
+    public static final String GITHUB_USER_DETAILS = "github_user_details";
+
     Parcelable listState;
-    RecyclerView.LayoutManager layoutManager;
-    ArrayList<GithubUsers> retrievedGithubUsers;
-    SwipeRefreshLayout githubUsersSwipeToRefreshLayout;
+    RecyclerView.LayoutManager mLayoutManager;
+    ArrayList<GithubUser> retrievedGithubUsers;
     GithubUsersPresenter githubUsersPresenter;
-    ProgressBar githubUsersProgressBar;
+
+    ActivityMainBinding mActivityMainBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        githubUsersRecyclerView = findViewById(R.id.recycler_view);
-        githubUsersSwipeToRefreshLayout = findViewById(R.id.github_users_swipe_refresh_layout);
-        githubUsersProgressBar = findViewById(R.id.github_users_progress_bar);
-        githubUsersRecyclerView.setHasFixedSize(true);
+        mActivityMainBinding = DataBindingUtil.setContentView(this,
+                R.layout.activity_main);
+        mActivityMainBinding.githubUsersSwipeRefreshLayout.setOnRefreshListener(this);
 
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            layoutManager = new GridLayoutManager(MainActivity.this, 2);
-        } else {
-            layoutManager = new GridLayoutManager(MainActivity.this, 3);
-        }
-
-        githubUsersRecyclerView.setLayoutManager(layoutManager);
         githubUsersPresenter = new GithubUsersPresenter(this, this);
         if (savedInstanceState == null) {
             loadGithubUsers();
         }
-        githubUsersSwipeToRefreshLayout.setOnRefreshListener(this);
-
     }
 
     public void loadGithubUsers() {
@@ -65,21 +53,22 @@ public class MainActivity extends AppCompatActivity implements GithubUsersView, 
             githubUsersPresenter.getGithubUsers();
             EspressoIdlingResource.increment();
         } else {
-            githubUsersProgressBar.setVisibility(View.GONE);
-            Snackbar.make(findViewById(R.id.main_activity_constraint_layout), R.string.no_internet,
+            mActivityMainBinding.githubUsersProgressBar.setVisibility(View.GONE);
+            Snackbar.make(mActivityMainBinding.mainActivityConstraintLayout,
+                    R.string.no_internet,
                     Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.retry, new NoInternetSnackBarListener())
+                    .setAction(R.string.retry, v -> loadGithubUsers())
                     .show();
         }
     }
 
     @Override
-    public void githubUsersHaveBeenFetchedAndAreReadyForUse(List<GithubUsers> githubUsers) {
-        retrievedGithubUsers = (ArrayList<GithubUsers>) githubUsers;
-        githubUsersRecyclerView.setAdapter(new GithubUsersAdapter(
-                MainActivity.this, githubUsers));
-        githubUsersRecyclerView.setVisibility(View.VISIBLE);
-        githubUsersProgressBar.setVisibility(View.GONE);
+    public void githubUsersHaveBeenFetchedAndAreReadyForUse(List<GithubUser> githubUsers) {
+        retrievedGithubUsers = (ArrayList<GithubUser>) githubUsers;
+        mActivityMainBinding.recyclerViewLayout.recyclerView.setVisibility(View.VISIBLE);
+        mActivityMainBinding.githubUsersProgressBar.setVisibility(View.GONE);
+
+        mActivityMainBinding.setGithubUsers(retrievedGithubUsers);
 
         EspressoIdlingResource.decrement();
     }
@@ -88,8 +77,11 @@ public class MainActivity extends AppCompatActivity implements GithubUsersView, 
     protected void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
         state.putParcelableArrayList(GITHUB_USERS, retrievedGithubUsers);
-        listState = layoutManager.onSaveInstanceState();
-        state.putParcelable(LIST_STATE_KEY, listState);
+        if (mActivityMainBinding.recyclerViewLayout.recyclerView.getLayoutManager() != null) {
+            listState = mActivityMainBinding.recyclerViewLayout.recyclerView.getLayoutManager()
+                    .onSaveInstanceState();
+            state.putParcelable(LIST_STATE_KEY, listState);
+        }
     }
 
     protected void onRestoreInstanceState(Bundle state) {
@@ -104,10 +96,16 @@ public class MainActivity extends AppCompatActivity implements GithubUsersView, 
     protected void onResume() {
         super.onResume();
         if (listState != null) {
-            githubUsersRecyclerView.setAdapter(new GithubUsersAdapter(MainActivity.this, retrievedGithubUsers));
-            layoutManager.onRestoreInstanceState(listState);
-            githubUsersRecyclerView.setVisibility(View.VISIBLE);
-            githubUsersProgressBar.setVisibility(View.GONE);
+
+            mActivityMainBinding.setGithubUsers(retrievedGithubUsers);
+
+            mLayoutManager = mActivityMainBinding.recyclerViewLayout.recyclerView.getLayoutManager();
+            if (mLayoutManager != null) {
+                mLayoutManager.onRestoreInstanceState(listState);
+            }
+
+            mActivityMainBinding.recyclerViewLayout.recyclerView.setVisibility(View.VISIBLE);
+            mActivityMainBinding.githubUsersProgressBar.setVisibility(View.GONE);
         }
     }
 
@@ -118,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements GithubUsersView, 
 
     private void refreshGithubUsers() {
         loadGithubUsers();
-        githubUsersSwipeToRefreshLayout.setRefreshing(false);
+        mActivityMainBinding.githubUsersSwipeRefreshLayout.setRefreshing(false);
     }
 
     @VisibleForTesting
@@ -126,10 +124,10 @@ public class MainActivity extends AppCompatActivity implements GithubUsersView, 
         return EspressoIdlingResource.getIdlingResource();
     }
 
-    private class NoInternetSnackBarListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            loadGithubUsers();
-        }
+    @Override
+    public void startDetailActivity(GithubUser githubUser) {
+        Intent startDetailActivityIntent = new Intent(this, DetailActivity.class);
+        startDetailActivityIntent.putExtra(GITHUB_USER_DETAILS, githubUser);
+        startActivity(startDetailActivityIntent);
     }
 }
