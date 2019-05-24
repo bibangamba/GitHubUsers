@@ -1,29 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_activity_constraint_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.levelup.bibangamba.githubusers.view.MainActivity">
+<layout>
 
-    <ProgressBar
-        android:id="@+id/github_users_progress_bar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/github_users_swipe_refresh_layout" />
+    <data>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/github_users_swipe_refresh_layout"
+        <import type="com.levelup.bibangamba.githubusers.model.GithubUser" />
+
+        <import type="java.util.List" />
+
+        <import type="android.os.Parcelable" />
+
+        <variable
+            name="githubUsers"
+            type="List&lt;GithubUser>" />
+
+        <variable
+            name="listState"
+            type="Parcelable" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main_activity_constraint_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context="com.levelup.bibangamba.githubusers.view.MainActivity">
 
-        <include layout="@layout/recyclerview" />
+        <ProgressBar
+            android:id="@+id/github_users_progress_bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/github_users_swipe_refresh_layout" />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
-</android.support.constraint.ConstraintLayout>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/github_users_swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/recycler_view_layout"
+                layout="@layout/recyclerview"
+                app:githubUsers="@{githubUsers}"
+                app:listState="@{listState}" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

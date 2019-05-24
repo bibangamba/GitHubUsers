@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/recycler_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:spanCount="2"
-    android:visibility="gone"
-    android:scrollbars="vertical"
-    tools:layoutManager="android.support.v7.widget.GridLayoutManager"
-    tools:listitem="@layout/github_user_grid_item" />
+<layout>
+
+    <data>
+
+        <import type="com.levelup.bibangamba.githubusers.model.GithubUser" />
+
+        <import type="java.util.List" />
+
+        <import type="android.os.Parcelable" />
+
+        <variable
+            name="githubUsers"
+            type="List&lt;GithubUser>" />
+
+        <variable
+            name="listState"
+            type="Parcelable" />
+    </data>
+
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:visibility="gone"
+        app:githubUsersAdapter="@{githubUsers}"
+        app:restoreListStateAdapter="@{listState}"
+        tools:layoutManager="android.support.v7.widget.GridLayoutManager"
+        tools:listitem="@layout/github_user_grid_item"
+        tools:spanCount="2" />
+
+</layout>
