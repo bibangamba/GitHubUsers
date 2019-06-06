@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.levelup.bibangamba.githubusers.R;
-import com.levelup.bibangamba.githubusers.model.GithubUser;
+import com.levelup.bibangamba.githubusers.model.GithubUsers;
 import com.levelup.bibangamba.githubusers.service.GithubService;
 import com.levelup.bibangamba.githubusers.view.GithubUserDetailsView;
 
@@ -30,15 +30,15 @@ public class GithubUserDetailsPresenter {
         githubService
                 .getApi()
                 .getUserInformation(username)
-                .enqueue((new Callback<GithubUser>() {
+                .enqueue((new Callback<GithubUsers>() {
                     @Override
-                    public void onResponse(@NonNull Call<GithubUser> call, @NonNull Response<GithubUser> response) {
-                        GithubUser githubUser = response.body();
+                    public void onResponse(@NonNull Call<GithubUsers> call, @NonNull Response<GithubUsers> response) {
+                        GithubUsers githubUser = response.body();
                             githubUserDetailsView.githubUserInformationFetchComplete(githubUser);
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<GithubUser> call, @NonNull Throwable t) {
+                    public void onFailure(@NonNull Call<GithubUsers> call, @NonNull Throwable t) {
                         try {
                             throw new InterruptedException(context.getString(R.string.error_message_when_retrieving_data_from_api));
                         } catch (InterruptedException e) {
