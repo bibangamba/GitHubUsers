@@ -1,5 +1,6 @@
 package com.levelup.bibangamba.githubusers.view;
 
+import android.os.SystemClock;
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -8,6 +9,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.levelup.bibangamba.githubusers.R;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,7 +28,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-public class GithubUserListTest {
+public class GithubUsersListTest {
     private static final String knownJavaDeveloperUsername = "nellyk";
     @Rule
     public ActivityTestRule<MainActivity> mainActivityActivityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -45,7 +47,7 @@ public class GithubUserListTest {
     @Test
     public void recyclerViewIsShown() throws Exception {
         registerIdlingResource();
-        onView(ViewMatchers.withId(R.id.recycler_view_layout)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.recycler_view)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -56,16 +58,16 @@ public class GithubUserListTest {
     @Test
     public void scrollThroughListOfGithubUsers() throws Exception {
         registerIdlingResource();
-        onView(withId(R.id.recycler_view_layout)).check(matches(isDisplayed()));
+        onView(withId(R.id.recycler_view)).check(matches(isDisplayed()));
         onView(withId(R.id.github_users_progress_bar)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.recycler_view_layout)).perform(scrollTo(hasDescendant(withText(knownJavaDeveloperUsername))));
+        onView(withId(R.id.recycler_view)).perform(scrollTo(hasDescendant(withText(knownJavaDeveloperUsername))));
     }
 
     @Test
     public void clickingOnAUserShouldGoToDetailsView() throws Exception {
         registerIdlingResource();
 
-        onView(withId(R.id.recycler_view_layout))
+        onView(withId(R.id.recycler_view))
                 .perform(RecyclerViewActions.actionOnItem(
                         hasDescendant(withText(knownJavaDeveloperUsername)), click()));
         onView(withId(R.id.usernameTextView)).check(matches(isDisplayed()));
@@ -75,7 +77,7 @@ public class GithubUserListTest {
     public void clickingOnBackButtonInDetailActivityTakesUsBackToMainActivity() throws Exception {
         registerIdlingResource();
 
-        onView(withId(R.id.recycler_view_layout))
+        onView(withId(R.id.recycler_view))
                 .perform(RecyclerViewActions.actionOnItem(
                         hasDescendant(withText(knownJavaDeveloperUsername)), click()));
         onView(withId(R.id.usernameTextView)).check(matches(isDisplayed()));

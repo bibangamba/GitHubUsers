@@ -1,202 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/detail_activity_layout"
+    android:background="@color/white">
 
-    <data>
+    <ImageView
+        android:id="@+id/profilePictureImageView"
+        android:layout_width="0dp"
+        android:layout_height="290dp"
+        android:contentDescription="@string/profile_picture_content_description"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_launcher" />
 
-        <import type="com.levelup.bibangamba.githubusers.model.GithubUserViewModel" />
+    <TextView
+        android:id="@+id/usernameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/default_username"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profilePictureImageView" />
 
-        <variable
-            name="userViewModel"
-            type="GithubUserViewModel" />
-    </data>
+    <TextView
+        android:id="@+id/organizationNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/default_organization"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameTextView" />
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/detail_activity_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white">
+    <TextView
+        android:id="@+id/profileUrlTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:autoLink="web"
+        android:text="@string/default_bio_text"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:layout_constraintBottom_toTopOf="@+id/followsValueTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/organizationNameTextView" />
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:visibility="@{userViewModel.imageVisibility ? View.GONE : View.VISIBLE}"
-            app:layout_constraintBottom_toTopOf="@+id/usernameTextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/profilePictureImageView"
-            app:layout_constraintTop_toTopOf="@+id/profilePictureImageView" />
+    <TextView
+        android:id="@+id/followsValueTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/default_follows_value"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        app:layout_constraintBaseline_toBaselineOf="@+id/reposValueTextView"
+        app:layout_constraintEnd_toStartOf="@+id/reposValueTextView"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <ImageView
-            android:id="@+id/profilePictureImageView"
-            android:layout_width="0dp"
-            android:layout_height="290dp"
-            android:contentDescription="@string/profile_picture_content_description"
-            android:scaleType="centerCrop"
-            android:visibility="@{userViewModel.imageVisibility ? View.VISIBLE : View.INVISIBLE}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:profilePictureURL="@{userViewModel.githubUser.profilePicture}"
-            app:requestListener="@{userViewModel.customRequestListener}"
-            tools:srcCompat="@mipmap/ic_launcher" />
+    <TextView
+        android:id="@+id/followsLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/follows_label"
+        app:layout_constraintEnd_toEndOf="@+id/followsValueTextView"
+        app:layout_constraintStart_toStartOf="@+id/followsValueTextView"
+        app:layout_constraintTop_toBottomOf="@+id/followsValueTextView" />
 
-        <TextView
-            android:id="@+id/usernameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@{userViewModel.githubUser.username, default=@string/default_username}"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profilePictureImageView"
-            tools:text="@string/default_username" />
+    <TextView
+        android:id="@+id/reposValueTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="48dp"
+        android:text="@string/default_repos_value"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        app:layout_constraintBottom_toTopOf="@+id/shareButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileUrlTextView" />
 
-        <TextView
-            android:id="@+id/organizationNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@{userViewModel.githubUser.company, default=@string/default_organization}"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/usernameTextView"
-            tools:text="@string/default_organization" />
+    <TextView
+        android:id="@+id/reposLabeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/repos_label"
+        app:layout_constraintEnd_toEndOf="@+id/reposValueTextView"
+        app:layout_constraintStart_toStartOf="@+id/reposValueTextView"
+        app:layout_constraintTop_toBottomOf="@+id/reposValueTextView" />
 
-        <TextView
-            android:id="@+id/profileUrlTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginLeft="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginRight="32dp"
-            android:layout_marginBottom="8dp"
-            android:autoLink="web"
-            android:clickable="true"
-            android:focusable="true"
-            android:text="@{userViewModel.githubUser.profileUrl, default=@string/default_bio_text}"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintBottom_toTopOf="@+id/followsValueTextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/organizationNameTextView"
-            tools:text="@string/default_bio_text" />
+    <TextView
+        android:id="@+id/followersValueTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/default_followers_value"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        app:layout_constraintBaseline_toBaselineOf="@+id/reposValueTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/reposValueTextView" />
 
-        <TextView
-            android:id="@+id/followsValueTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@{userViewModel.githubUser.following, default=@string/default_follows_value}"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            app:layout_constraintBaseline_toBaselineOf="@+id/reposValueTextView"
-            app:layout_constraintEnd_toStartOf="@+id/reposValueTextView"
-            app:layout_constraintHorizontal_bias="0.505"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="@string/default_follows_value" />
+    <TextView
+        android:id="@+id/followersLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/followers_label"
+        app:layout_constraintBaseline_toBaselineOf="@+id/reposLabeTextView"
+        app:layout_constraintEnd_toEndOf="@+id/followersValueTextView"
+        app:layout_constraintStart_toStartOf="@+id/followersValueTextView" />
 
-        <TextView
-            android:id="@+id/followsLabelTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/follows_label"
-            app:layout_constraintEnd_toEndOf="@+id/followsValueTextView"
-            app:layout_constraintStart_toStartOf="@+id/followsValueTextView"
-            app:layout_constraintTop_toBottomOf="@+id/followsValueTextView" />
-
-        <TextView
-            android:id="@+id/reposValueTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="48dp"
-            android:text="@{userViewModel.githubUser.repos, default=@string/default_repos_value}"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            app:layout_constraintBottom_toTopOf="@+id/shareButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profileUrlTextView"
-            tools:text="@string/default_repos_value" />
-
-        <TextView
-            android:id="@+id/reposLabelTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/repos_label"
-            app:layout_constraintEnd_toEndOf="@+id/reposValueTextView"
-            app:layout_constraintStart_toStartOf="@+id/reposValueTextView"
-            app:layout_constraintTop_toBottomOf="@+id/reposValueTextView" />
-
-        <TextView
-            android:id="@+id/followersValueTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@{userViewModel.githubUser.followers, default=@string/default_followers_value}"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            app:layout_constraintBaseline_toBaselineOf="@+id/reposValueTextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/reposValueTextView"
-            tools:text="@string/default_followers_value" />
-
-        <TextView
-            android:id="@+id/followersLabelTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/followers_label"
-            app:layout_constraintBaseline_toBaselineOf="@+id/reposLabelTextView"
-            app:layout_constraintEnd_toEndOf="@+id/followersValueTextView"
-            app:layout_constraintStart_toStartOf="@+id/followersValueTextView" />
-
-        <ImageButton
-            android:id="@+id/shareButton"
-            style="@style/Widget.AppCompat.ImageButton"
-            android:layout_width="52dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/share_button_background"
-            android:contentDescription="@string/share_button_content_description"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/ic_share_black_24dp" />
-    </android.support.constraint.ConstraintLayout>
-
-</layout>
+    <ImageButton
+        android:id="@+id/shareButton"
+        style="@style/Widget.AppCompat.ImageButton"
+        android:layout_width="52dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/share_button_background"
+        android:contentDescription="@string/share_button_content_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_share_black_24dp" />
+</android.support.constraint.ConstraintLayout>
