@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".listgithubusers.GithubUsersFragment">
 
     <data>
 
         <import type="com.levelup.bibangamba.githubusers.model.GithubUser" />
+
+        <import type="com.levelup.bibangamba.githubusers.listgithubusers.GithubUsersContract.View" />
 
         <import type="java.util.List" />
 
@@ -14,17 +18,18 @@
             type="List&lt;GithubUser>" />
 
         <variable
+            name="githubUsersView"
+            type="View" />
+
+        <variable
             name="listState"
             type="Parcelable" />
     </data>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/main_activity_constraint_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.levelup.bibangamba.githubusers.view.GithubUsersActivity">
+        android:layout_height="match_parent">
 
         <ProgressBar
             android:id="@+id/github_users_progress_bar"
@@ -46,6 +51,7 @@
                 android:id="@+id/recycler_view_layout"
                 layout="@layout/recyclerview"
                 app:githubUsers="@{githubUsers}"
+                app:githubUsersView="@{githubUsersView}"
                 app:listState="@{listState}" />
 
         </android.support.v4.widget.SwipeRefreshLayout>
