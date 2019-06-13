@@ -8,8 +8,8 @@
             type="com.levelup.bibangamba.githubusers.model.GithubUser" />
 
         <variable
-            name="iMainActivity"
-            type="com.levelup.bibangamba.githubusers.view.IMainActivity" />
+            name="githubUsersView"
+            type="com.levelup.bibangamba.githubusers.listgithubusers.GithubUsersContract.View" />
     </data>
 
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/margin_3dp"
-        android:onClick="@{()-> iMainActivity.startDetailActivity(user)}"
+        android:onClick="@{()-> githubUsersView.showGithubUserDetailsUI(user)}"
         app:cardBackgroundColor="@color/accent"
         card_view:cardCornerRadius="4dp"
         tools:cardBackgroundColor="@color/accent">

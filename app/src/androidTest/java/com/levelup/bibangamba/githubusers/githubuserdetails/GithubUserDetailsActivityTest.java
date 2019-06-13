@@ -1,8 +1,7 @@
-package com.levelup.bibangamba.githubusers.view;
+package com.levelup.bibangamba.githubusers.githubuserdetails;
 
 import android.app.Activity;
 import android.app.Instrumentation;
-import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.IdlingRegistry;
@@ -10,8 +9,14 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
 
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+import androidx.test.uiautomator.UiSelector;
+
 import com.levelup.bibangamba.githubusers.R;
 import com.levelup.bibangamba.githubusers.model.GithubUser;
+import com.levelup.bibangamba.githubusers.util.Constants;
 import com.levelup.bibangamba.githubusers.util.DataBindingIdlingResource;
 
 import org.junit.After;
@@ -33,11 +38,13 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class UserDetailsScreenTest {
+public class GithubUserDetailsActivityTest {
     private static final String knownJavaDeveloperUsername = "nellyk";
+
     @Rule
-    public IntentsTestRule<DetailActivity> detailActivityActivityTestRule =
-            new IntentsTestRule<>(DetailActivity.class, true, false);
+    public IntentsTestRule<GithubUserDetailsActivity> githubUserDetailsActivityIntentsTestRule =
+            new IntentsTestRule<>(GithubUserDetailsActivity.class, true, false);
+
     private DataBindingIdlingResource mDataBindingIdlingResource;
 
     @Before
@@ -47,11 +54,11 @@ public class UserDetailsScreenTest {
         githubUser.setProfilePicture("https://avatars3.githubusercontent.com/u/3062772?v=4");
         githubUser.setProfileUrl("https://github.com/nellyk");
         Intent startDetailActivityIntent = new Intent();
-        startDetailActivityIntent.putExtra(getResourceString(R.string.github_user_details), githubUser);
-        detailActivityActivityTestRule.launchActivity(startDetailActivityIntent);
+        startDetailActivityIntent.putExtra(Constants.GITHUB_USER_DETAILS_KEY, githubUser);
+        githubUserDetailsActivityIntentsTestRule.launchActivity(startDetailActivityIntent);
 
         mDataBindingIdlingResource =
-                new DataBindingIdlingResource(detailActivityActivityTestRule);
+                new DataBindingIdlingResource(githubUserDetailsActivityIntentsTestRule);
 
         IdlingRegistry.getInstance().register(mDataBindingIdlingResource);
     }
@@ -63,6 +70,7 @@ public class UserDetailsScreenTest {
 
     @Test
     public void githubUserDetailsScreenIsShown() {
+        registerIdlingResource();
         onView(withId(R.id.usernameTextView)).check(matches(withText(knownJavaDeveloperUsername)));
         onView(withId(R.id.usernameTextView)).check(matches(isDisplayed()));
         onView(withId(R.id.shareButton)).check(matches(isDisplayed()));
@@ -110,7 +118,7 @@ public class UserDetailsScreenTest {
     @After
     public void unregisterIdlingResource() {
         IdlingRegistry.getInstance().unregister(
-                detailActivityActivityTestRule.getActivity().getCountingIdlingResource());
+                githubUserDetailsActivityIntentsTestRule.getActivity().getCountingIdlingResource());
         IdlingRegistry.getInstance().unregister(mDataBindingIdlingResource);
 
     }
@@ -122,12 +130,6 @@ public class UserDetailsScreenTest {
      */
     private void registerIdlingResource() {
         IdlingRegistry.getInstance().register(
-                detailActivityActivityTestRule.getActivity().getCountingIdlingResource());
+                githubUserDetailsActivityIntentsTestRule.getActivity().getCountingIdlingResource());
     }
-
-    private String getResourceString(int id) {
-        Context targetContext = InstrumentationRegistry.getTargetContext();
-        return targetContext.getResources().getString(id);
-    }
-
 }

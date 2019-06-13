@@ -8,7 +8,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GithubService {
-    private final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+    private static final String BASE_URL = "https://api.github.com/";
+
+    private static final OkHttpClient okHttpClient = new OkHttpClient.Builder()
             .addInterceptor(chain ->
                     chain.proceed(chain.request().newBuilder().addHeader("Authorization",
                             "bearer " + BuildConfig.GITHUB_ACCESS_TOKEN).build()))
@@ -16,17 +18,15 @@ public class GithubService {
                     .setLevel(HttpLoggingInterceptor.Level.BODY))
             .build();
 
-    private Retrofit retrofit = null;
+    private static final Retrofit retrofit2 = new Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+    private static final GithubUsersAPI GITHUB_USERS_API = retrofit2.create(GithubUsersAPI.class);
 
-    public GithubUsersAPI getApi() {
-        final String BASE_URL = "https://api.github.com/";
-        if (retrofit == null) {
-            retrofit = new Retrofit.Builder()
-                    .client(okHttpClient)
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-        }
-        return retrofit.create(GithubUsersAPI.class);
+    public static GithubUsersAPI getServiceInstance() {
+        return GITHUB_USERS_API;
     }
+
 }

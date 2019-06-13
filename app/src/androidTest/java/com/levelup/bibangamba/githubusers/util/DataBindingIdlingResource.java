@@ -4,7 +4,8 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
-import android.view.ViewGroup;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,9 +60,21 @@ public class DataBindingIdlingResource implements IdlingResource {
 
     private ViewDataBinding getBinding() {
         if (mActivityTestRule.getActivity() != null) {
-            return DataBindingUtil.getBinding(
-                    ((ViewGroup) mActivityTestRule.getActivity()
-                            .findViewById(android.R.id.content)).getChildAt(0));
+            FragmentActivity activity = (FragmentActivity) mActivityTestRule.getActivity();
+            List<Fragment> fragments = activity.getSupportFragmentManager().getFragments();
+            List<ViewDataBinding> bindings = new ArrayList<>();
+            for (Fragment fragment : fragments) {
+                if (fragment.getView() != null) {
+                    bindings.add(DataBindingUtil.getBinding(fragment.getView()));
+                }
+            }
+
+            /*
+              Our application only has a single fragment per activity so we are sure we only get
+              one binding in the list. Additionally, our application doesn't have nested fragments
+              so there is no need to go deeper i.e. childFragmentManager and etc
+             */
+            return bindings.get(0);
         } else {
             return null;
         }

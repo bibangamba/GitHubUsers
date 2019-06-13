@@ -5,6 +5,8 @@
 
         <import type="com.levelup.bibangamba.githubusers.model.GithubUser" />
 
+        <import type="com.levelup.bibangamba.githubusers.listgithubusers.GithubUsersContract.View" />
+
         <import type="java.util.List" />
 
         <import type="android.os.Parcelable" />
@@ -12,6 +14,10 @@
         <variable
             name="githubUsers"
             type="List&lt;GithubUser>" />
+
+        <variable
+            name="githubUsersView"
+            type="View" />
 
         <variable
             name="listState"
@@ -25,8 +31,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        android:visibility="gone"
-        app:githubUsersAdapter="@{githubUsers}"
+        app:githubUsers="@{githubUsers}"
+        app:githubUsersView="@{githubUsersView}"
         app:restoreListStateAdapter="@{listState}"
         tools:layoutManager="android.support.v7.widget.GridLayoutManager"
         tools:listitem="@layout/github_user_grid_item"
