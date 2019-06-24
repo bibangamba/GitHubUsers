@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.levelup.bibangamba.githubusers.R;
 import com.levelup.bibangamba.githubusers.databinding.ActivityGithubUserDetailBinding;
@@ -30,6 +31,15 @@ public class GithubUserDetailsActivity extends AppCompatActivity {
                     githubUserDetailsFragment, R.id.github_user_details_content_frame);
         }
         mGithubDetailsPresenter = new GithubDetailsPresenter(githubUserDetailsFragment);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @VisibleForTesting

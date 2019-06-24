@@ -38,6 +38,22 @@ android {
             buildConfigField("String", "GITHUB_ACCESS_TOKEN", "\"" + getGithubToken() + "\"")
         }
     }
+    flavorDimensions("testing")
+    productFlavors {
+        mock {
+            dimension "testing"
+            applicationIdSuffix = ".mock"
+        }
+        prod {
+            dimension "testing"
+        }
+    }
+    android.variantFilter { variant ->
+        if (variant.buildType.name == 'release'
+                && variant.getFlavors().get(0).name == "mock") {
+            variant.setIgnore(true)
+        }
+    }
     dataBinding {
         enabled = true
     }
@@ -102,7 +118,9 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
 
     androidTestImplementation "androidx.test.uiautomator:uiautomator:$rootProject.uiautomatorVersion"
-    implementation "com.android.support:support-v4:28.0.0"
+    implementation "com.android.support:support-v4:$rootProject.supportLibraryVersion"
 
     implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.logginInterceptor"
+
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:$rootProject.mockWebserver"
 }

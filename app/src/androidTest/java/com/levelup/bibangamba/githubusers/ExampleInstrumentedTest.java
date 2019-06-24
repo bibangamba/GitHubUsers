@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.levelup.bibangamba.githubusers", appContext.getPackageName());
+        assertEquals("com.levelup.bibangamba.githubusers.mock", appContext.getPackageName());
     }
 }
