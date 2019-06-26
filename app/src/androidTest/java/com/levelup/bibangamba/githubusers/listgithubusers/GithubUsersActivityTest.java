@@ -87,13 +87,6 @@ public class GithubUsersActivityTest {
     }
 
     @Test
-    public void swipeToRefreshWorks() {
-        mMockWebServer.enqueue(MOCK_ALL_DEVS_RESPONSE);
-        registerIdlingResource();
-        onView(ViewMatchers.withId(R.id.github_users_swipe_refresh_layout)).perform(swipeDown());
-    }
-
-    @Test
     public void scrollThroughListOfGithubUsers() {
         mMockWebServer.enqueue(MOCK_ALL_DEVS_RESPONSE);
         registerIdlingResource();
