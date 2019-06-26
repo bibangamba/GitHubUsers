@@ -2,6 +2,7 @@ package com.levelup.bibangamba.githubusers.listgithubusers;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.levelup.bibangamba.githubusers.model.GithubUser;
 import com.levelup.bibangamba.githubusers.model.GithubUsersResponse;
@@ -19,9 +20,11 @@ import retrofit2.Response;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class GithubUsersPresenter implements GithubUsersContract.Presenter {
+
+    private static final String TAG = GithubUsersPresenter.class.getSimpleName();
     private final GithubUsersContract.View mGithubUsersView;
 
-    public GithubUsersPresenter(@NonNull GithubUsersContract.View githubUsersView) {
+    GithubUsersPresenter(@NonNull GithubUsersContract.View githubUsersView) {
         mGithubUsersView = checkNotNull(githubUsersView,
                 "githubUsersView cannot be null!");
         mGithubUsersView.setPresenter(this);
@@ -52,7 +55,6 @@ public class GithubUsersPresenter implements GithubUsersContract.Presenter {
                         if (!mGithubUsersView.isActive()) {
                             return;
                         }
-
                         mGithubUsersView.showLoadingIndicator(false);
                         mGithubUsersView.showGithubUsers(users);
                         EspressoIdlingResource.decrement();
@@ -61,6 +63,8 @@ public class GithubUsersPresenter implements GithubUsersContract.Presenter {
                     @Override
                     public void onFailure(@NonNull Call<GithubUsersResponse> call,
                                           @NonNull Throwable t) {
+                        EspressoIdlingResource.decrement();
+
 //                        if (!mGithubUsersView.isActive()) {
 //                            return;
 //                        }

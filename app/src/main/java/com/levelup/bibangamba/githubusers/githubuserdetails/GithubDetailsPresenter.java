@@ -2,6 +2,7 @@ package com.levelup.bibangamba.githubusers.githubuserdetails;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.levelup.bibangamba.githubusers.model.GithubUser;
 import com.levelup.bibangamba.githubusers.service.GithubService;
@@ -12,6 +13,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class GithubDetailsPresenter implements GithubUserDetailsContract.Presenter {
+    public static final String TAG = GithubDetailsPresenter.class.getSimpleName();
     private GithubUserDetailsContract.View mGithubUserDetailsView;
 
     GithubDetailsPresenter(GithubUserDetailsContract.View githubUserDetailsView) {
@@ -53,7 +55,7 @@ public class GithubDetailsPresenter implements GithubUserDetailsContract.Present
                     @Override
                     public void onFailure(@NonNull Call<GithubUser> call, @NonNull Throwable t) {
 //                        mGithubUserDetailsView.showErrorOnFailingToLoadGithubUserDetails();
-//                        EspressoIdlingResource.decrement();
+                        EspressoIdlingResource.decrement();
                     }
                 }));
     }

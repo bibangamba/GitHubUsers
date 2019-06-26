@@ -3,17 +3,12 @@ package com.levelup.bibangamba.githubusers.githubuserdetails;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
 
-import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObject;
-import androidx.test.uiautomator.UiObjectNotFoundException;
-import androidx.test.uiautomator.UiSelector;
-
+import com.levelup.bibangamba.githubusers.Injection;
 import com.levelup.bibangamba.githubusers.R;
 import com.levelup.bibangamba.githubusers.model.GithubUser;
 import com.levelup.bibangamba.githubusers.util.Constants;
@@ -24,6 +19,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.io.IOException;
+
+import okhttp3.mockwebserver.MockWebServer;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -36,25 +35,36 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.levelup.bibangamba.githubusers.util.MockResponseData.MOCK_FOLLOWERS_COUNT;
+import static com.levelup.bibangamba.githubusers.util.MockResponseData.MOCK_FOLLOWING_COUNT;
+import static com.levelup.bibangamba.githubusers.util.MockResponseData.MOCK_REPO_COUNT;
+import static com.levelup.bibangamba.githubusers.util.MockResponseData.SINGLE_USER_NELLYK_RESPONSE;
 
 @RunWith(AndroidJUnit4.class)
 public class GithubUserDetailsActivityTest {
-    private static final String knownJavaDeveloperUsername = "nellyk";
 
+    private static final String DEVELOPER_USERNAME_NELLYK = "nellyk";
+    private static final int PORT_NUMBER = 8080;
     @Rule
     public IntentsTestRule<GithubUserDetailsActivity> githubUserDetailsActivityIntentsTestRule =
-            new IntentsTestRule<>(GithubUserDetailsActivity.class, true, false);
-
+            new IntentsTestRule<>(GithubUserDetailsActivity.class, true,
+                    false);
+    private MockWebServer mMockWebServer;
     private DataBindingIdlingResource mDataBindingIdlingResource;
 
     @Before
-    public void intentWithStubbedUserNameAndInfo() {
+    public void intentWithStubbedUserNameAndInfo() throws IOException {
         GithubUser githubUser = new GithubUser();
-        githubUser.setUsername(knownJavaDeveloperUsername);
+        githubUser.setUsername(DEVELOPER_USERNAME_NELLYK);
         githubUser.setProfilePicture("https://avatars3.githubusercontent.com/u/3062772?v=4");
         githubUser.setProfileUrl("https://github.com/nellyk");
         Intent startDetailActivityIntent = new Intent();
         startDetailActivityIntent.putExtra(Constants.GITHUB_USER_DETAILS_KEY, githubUser);
+
+        mMockWebServer = new MockWebServer();
+        mMockWebServer.start(PORT_NUMBER);
+        Injection.setBaseUrl(mMockWebServer.url("/").toString());
+
         githubUserDetailsActivityIntentsTestRule.launchActivity(startDetailActivityIntent);
 
         mDataBindingIdlingResource =
@@ -70,8 +80,10 @@ public class GithubUserDetailsActivityTest {
 
     @Test
     public void githubUserDetailsScreenIsShown() {
+        mMockWebServer.enqueue(SINGLE_USER_NELLYK_RESPONSE);
+
         registerIdlingResource();
-        onView(withId(R.id.usernameTextView)).check(matches(withText(knownJavaDeveloperUsername)));
+        onView(withId(R.id.usernameTextView)).check(matches(withText(DEVELOPER_USERNAME_NELLYK)));
         onView(withId(R.id.usernameTextView)).check(matches(isDisplayed()));
         onView(withId(R.id.shareButton)).check(matches(isDisplayed()));
         onView(withId(R.id.profileUrlTextView)).check(matches(isDisplayed()));
@@ -92,11 +104,13 @@ public class GithubUserDetailsActivityTest {
 
     @Test
     public void furtherUserDetailsAreFetchedAndShownOnDetailsView() {
+        mMockWebServer.enqueue(SINGLE_USER_NELLYK_RESPONSE);
+
         registerIdlingResource();
 
-        onView(withId(R.id.followersValueTextView)).check(matches(withText("51")));
-        onView(withId(R.id.reposValueTextView)).check(matches(withText("44")));
-        onView(withId(R.id.followsValueTextView)).check(matches(withText("107")));
+        onView(withId(R.id.followersValueTextView)).check(matches(withText(MOCK_FOLLOWERS_COUNT)));
+        onView(withId(R.id.reposValueTextView)).check(matches(withText(MOCK_REPO_COUNT)));
+        onView(withId(R.id.followsValueTextView)).check(matches(withText(MOCK_FOLLOWING_COUNT)));
     }
 
     /**
@@ -131,5 +145,10 @@ public class GithubUserDetailsActivityTest {
     private void registerIdlingResource() {
         IdlingRegistry.getInstance().register(
                 githubUserDetailsActivityIntentsTestRule.getActivity().getCountingIdlingResource());
+    }
+
+    @After
+    public void tearDown() throws IOException {
+        mMockWebServer.shutdown();
     }
 }
