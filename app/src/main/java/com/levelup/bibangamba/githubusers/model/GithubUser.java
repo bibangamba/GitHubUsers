@@ -5,16 +5,16 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class GithubUsers implements Parcelable {
-    public static final Creator<GithubUsers> CREATOR = new Creator<GithubUsers>() {
+public class GithubUser implements Parcelable {
+    public static final Creator<GithubUser> CREATOR = new Creator<GithubUser>() {
         @Override
-        public GithubUsers createFromParcel(Parcel in) {
-            return new GithubUsers(in);
+        public GithubUser createFromParcel(Parcel in) {
+            return new GithubUser(in);
         }
 
         @Override
-        public GithubUsers[] newArray(int size) {
-            return new GithubUsers[size];
+        public GithubUser[] newArray(int size) {
+            return new GithubUser[size];
         }
     };
     @SerializedName("avatar_url")
@@ -32,10 +32,10 @@ public class GithubUsers implements Parcelable {
     @SerializedName("company")
     private String company;
 
-    public GithubUsers() {
+    public GithubUser() {
     }
 
-    protected GithubUsers(Parcel in) {
+    protected GithubUser(Parcel in) {
         profilePicture = in.readString();
         username = in.readString();
         profileUrl = in.readString();

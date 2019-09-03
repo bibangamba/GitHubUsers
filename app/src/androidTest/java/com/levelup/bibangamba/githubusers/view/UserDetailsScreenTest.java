@@ -2,7 +2,6 @@ package com.levelup.bibangamba.githubusers.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
@@ -10,7 +9,7 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.levelup.bibangamba.githubusers.R;
-import com.levelup.bibangamba.githubusers.model.GithubUsers;
+import com.levelup.bibangamba.githubusers.model.GithubUser;
 
 import org.junit.After;
 import org.junit.Before;
@@ -33,11 +32,11 @@ public class UserDetailsScreenTest {
 
 
     @Rule
-    public IntentsTestRule<DetailActivity> detailActivityActivityTestRule = new IntentsTestRule<>(DetailActivity.class, true, false);
+    public IntentsTestRule<UserDetailActivity> detailActivityActivityTestRule = new IntentsTestRule<>(UserDetailActivity.class, true, false);
 
     @Before
     public void intentWithStubbedUserNameAndInfo() {
-        GithubUsers githubUser = new GithubUsers();
+        GithubUser githubUser = new GithubUser();
         githubUser.setUsername("nellyk");
         githubUser.setProfilePicture("https://avatars3.githubusercontent.com/u/3062772?v=4");
         githubUser.setProfileUrl("https://github.com/nellyk");

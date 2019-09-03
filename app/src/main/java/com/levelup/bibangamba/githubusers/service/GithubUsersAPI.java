@@ -1,6 +1,6 @@
 package com.levelup.bibangamba.githubusers.service;
 
-import com.levelup.bibangamba.githubusers.model.GithubUsers;
+import com.levelup.bibangamba.githubusers.model.GithubUser;
 import com.levelup.bibangamba.githubusers.model.GithubUsersResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -11,5 +11,5 @@ public interface GithubUsersAPI {
     Call<GithubUsersResponse> getAllUsers();
 
     @GET("users/{username}")
-    Call<GithubUsers> getUserInformation(@Path("username") String username);
+    Call<GithubUser> getUserInformation(@Path("username") String username);
 }

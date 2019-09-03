@@ -1,46 +1,42 @@
 package com.levelup.bibangamba.githubusers.presenter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.levelup.bibangamba.githubusers.R;
-import com.levelup.bibangamba.githubusers.model.GithubUsers;
-import com.levelup.bibangamba.githubusers.service.GithubService;
-import com.levelup.bibangamba.githubusers.view.GithubUserDetailsView;
+import com.levelup.bibangamba.githubusers.model.GithubUser;
+import com.levelup.bibangamba.githubusers.service.GithubUsersAPI;
+import com.levelup.bibangamba.githubusers.view.GithubUsersDetailContract;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class GithubUserDetailsPresenter {
-    private Context context;
-    private String TAG;
-    private GithubUserDetailsView githubUserDetailsView;
-    private GithubService githubService;
+public class GithubUserDetailsPresenter implements
+        GithubUsersDetailContract.GithubUserDetailPresenter {
+    private static final String TAG = "GHDetailsPresenter";
+    private GithubUsersDetailContract.GithubUserDetailView githubUserDetailsView;
+    private GithubUsersAPI mGithubUsersAPI;
 
-    public GithubUserDetailsPresenter(Context context, GithubUserDetailsView view, GithubService githubService) {
-        this.context = context;
-        TAG = context.getString(R.string.GithubUserDetailsPresenterTag);
-        this.githubUserDetailsView = view;
-        this.githubService = githubService;
+    public GithubUserDetailsPresenter(GithubUsersAPI githubUsersAPI) {
+        this.mGithubUsersAPI = githubUsersAPI;
     }
 
+    @Override
     public void getGithubUserInfo(String username) {
-        githubService
-                .getApi()
+        mGithubUsersAPI
                 .getUserInformation(username)
-                .enqueue((new Callback<GithubUsers>() {
+                .enqueue((new Callback<GithubUser>() {
                     @Override
-                    public void onResponse(@NonNull Call<GithubUsers> call, @NonNull Response<GithubUsers> response) {
-                        GithubUsers githubUser = response.body();
-                            githubUserDetailsView.githubUserInformationFetchComplete(githubUser);
+                    public void onResponse(@NonNull Call<GithubUser> call,
+                                           @NonNull Response<GithubUser> response) {
+                        GithubUser githubUser = response.body();
+                        githubUserDetailsView.handleRetrievedUserInfo(githubUser);
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<GithubUsers> call, @NonNull Throwable t) {
+                    public void onFailure(@NonNull Call<GithubUser> call, @NonNull Throwable t) {
                         try {
-                            throw new InterruptedException(context.getString(R.string.error_message_when_retrieving_data_from_api));
+                            throw new InterruptedException("Failed to retrieve Github user info");
                         } catch (InterruptedException e) {
                             Log.e(TAG, e.toString());
                         }
@@ -48,4 +44,13 @@ public class GithubUserDetailsPresenter {
                 }));
     }
 
+    @Override
+    public void attach(GithubUsersDetailContract.GithubUserDetailView view) {
+        githubUserDetailsView = view;
+    }
+
+    @Override
+    public void detach() {
+        githubUserDetailsView = null;
+    }
 }
