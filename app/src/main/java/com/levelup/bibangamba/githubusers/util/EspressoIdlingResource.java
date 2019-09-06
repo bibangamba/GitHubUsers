@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package util;
+package com.levelup.bibangamba.githubusers.util;
 
 import android.support.test.espresso.IdlingResource;
 

@@ -17,4 +17,6 @@
     <string name="error_message_when_retrieving_data_from_api">Failed to retrieve GithubUsersResponse</string>
     <string name="github_user_details">github_user_details</string>
     <string name="GithubUserDetailsPresenterTag">GithubUserDetailsPresenter</string>
+    <string name="no_internet">No internet detected.</string>
+    <string name="retry">retry</string>
 </resources>

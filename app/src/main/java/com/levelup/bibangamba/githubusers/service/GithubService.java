@@ -1,4 +1,4 @@
-package service;
+package com.levelup.bibangamba.githubusers.service;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

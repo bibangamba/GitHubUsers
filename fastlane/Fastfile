@@ -1,0 +1,37 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+
+default_platform(:android)
+
+platform :android do
+    before_all do
+        ENV["SLACK_URL"] = "https://hooks.slack.com/services/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"
+    end
+
+    desc "Build a new APK"
+    lane :slackbuild do |options|
+        gradle(
+            task: "clean assemble",
+            flavor: options[:flavor],
+            build_type: "Release"
+        )
+        slack(message: "Build Successful")
+        upload_to_slack()
+    end
+
+    desc "Upload the latest output APK to #mobile-team Slack channel"
+    private_lane :upload_to_slack do |options|
+        full_file_path = lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+        file_name = full_file_path.gsub(/\/.*\//,"")
+        sh "echo Uploading " + file_name + " to #converge-codelab-qa Slack"
+        sh "curl https://slack.com/api/files.upload -F token=\"xoxp-424384161762-553245889121-581295556742-3854e79d4a320a1e596509e301dc3bc1\" -F channels=\"converge-codelab-qa\" -F title=\"" + file_name + "\" -F filename=\"" + file_name + "\" -F file=@" + full_file_path
+    end
+end

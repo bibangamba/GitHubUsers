@@ -38,6 +38,15 @@ Below are instructions to get the app good to run on your local machine.
 * [Android Java](https://codelabs.developers.google.com/codelabs/build-your-first-android-app/) - Codelab on Java Android
 * [Android Studio](https://developer.android.com/studio) - IDE
 * [Retrofit](https://square.github.io/retrofit/) - HTTP Client for Android
+* [Invision](https://invisionapp.com) & [Sketch](https://www.sketch.com/) - Mock up design tools
+
+## Rationale for choice of mock up design tools
+1. I found out that the project I would be working on (Converge Mobile) was using Invision for its 
+design mock ups and I wanted to experience using it too.
+2. I found that creating an interactive mock up was quite easy on invision once I had designed 
+the boards in Sketch
+3. Sketch as a design tool was easy to use, quite powerful, and had tons of free icons 
+& online support
 
 ## Author
 

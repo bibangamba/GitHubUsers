@@ -1,0 +1,10 @@
+#!/bin/sh
+# copy this file into the .git/hooks/ directory
+# make it executable by running `chmod +x pre-commit`
+./gradlew check
+$status = $?
+# If ./gradlew returned anything other than 0, the tests failed...
+if [ "$status" -ne 0 ] ; then
+    echo "Abort commit due to violations"
+    exit 1
+fi
